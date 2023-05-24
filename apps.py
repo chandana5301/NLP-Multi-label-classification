@@ -12,15 +12,15 @@ labelnames=['appreciation', 'surprise','negative','confusion','sadness','fear','
 class bertmodel(torch.nn.Module):
     def __init__(self):
         super().__init__()
-        self.model = BertModel.from_pretrained("bert-base-uncased", return_dict=False)
+        self.model = RobertaModel.from_pretrained("roberta-base",return_dict=False)
         self.classifier = torch.nn.Linear(768, 14)
         self.l2 = torch.nn.Dropout(0.3)
-
     def forward(self, input_ids, attention_mask, token_type_ids):
         _, features = self.model(input_ids=input_ids, attention_mask=attention_mask, token_type_ids=token_type_ids)
         output = self.classifier(features)
         o1 = self.l2(output)
         return o1
+
 def Model(text):
     test_encoding = (tokenizer.encode_plus(text, max_length=30, truncation=True, return_token_type_ids=True,
                                            padding='max_length', return_tensors='pt')).to("cuda")
@@ -38,11 +38,12 @@ def Model(text):
             labelcon.append(label)
     return pred,labelcon
 
-MODEL_PATH = 'goemotionsbert.pth'
+MODEL_PATH = 'goemotions1.pth'
 model=bertmodel()
+
 model.load_state_dict(torch.load(MODEL_PATH))
 model=model.to("cuda")
-tokenizer=BertTokenizer.from_pretrained("bert-base-uncased")
+tokenizer=RobertaTokenizer.from_pretrained("roberta-base")
 
 app = Flask(__name__)
 
