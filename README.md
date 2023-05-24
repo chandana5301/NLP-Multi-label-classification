@@ -8,3 +8,6 @@ Use the trained model to test and upload it in the same folder as this repositor
 Install:
 pip install flask
 pip install -r requirements.txt
+
+After uploading your model file change the name of the file in "apps.py" ---> MODEL_PATH=" "
+Run it using the command "python apps.py"
